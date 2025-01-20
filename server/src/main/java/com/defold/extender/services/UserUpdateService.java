@@ -32,7 +32,7 @@ public class UserUpdateService {
         @Value("${extender.authentication.users}") Resource usersResource,
         @Value("${extender.authentication.update-interval}") long updateInterval,
         InMemoryUserDetailsManager userDetailsManager) {
-            LOGGER.info("UserUpdateService() updateInterval = " + updateInterval + " usersResource = " + usersResource);
+            LOGGER.debug("UserUpdateService() updateInterval = " + updateInterval + " usersResource = " + usersResource);
             this.usersResource = usersResource;
             this.updateInterval = updateInterval;
             this.userDetailsManager = userDetailsManager;
@@ -90,18 +90,18 @@ public class UserUpdateService {
      */
     public void update() {
         if (usersResource == null) {
-            LOGGER.info("UserUpdateService - No extender.authentication.users configuration has been set");
+            LOGGER.debug("UserUpdateService - No extender.authentication.users configuration has been set");
             return;
         }
 
         if (userDetailsManager == null) {
-            LOGGER.info("UserUpdateService - No userDetailsManager");
+            LOGGER.debug("UserUpdateService - No userDetailsManager");
             return;
         }
 
         final long now = System.currentTimeMillis();
         if ((now - lastUpdateTimestamp) < updateInterval) {
-            LOGGER.info("UserUpdateService - update() skipping update since not enough time has elapsed");
+            LOGGER.debug("UserUpdateService - update() skipping update since not enough time has elapsed");
             return;
         }
         lastUpdateTimestamp = now;
@@ -111,7 +111,7 @@ public class UserUpdateService {
 
     @Scheduled(fixedDelayString="${extender.authentication.update-interval:900000}")
     public void schedulesUpdate() {
-        LOGGER.info("Schedule user credentials update");
+        LOGGER.debug("Schedule user credentials update");
         update();
     }
 }
